@@ -38,7 +38,7 @@ fun NavGraphBuilder.appGraph(
 
         // this will be main screen
         composable(AppScreen.MainScreen.route) {
-            MainScreen(Modifier.fillMaxSize(), navController)
+            MainScreen(Modifier.fillMaxSize())
         }
     }
 
