@@ -26,9 +26,11 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -60,14 +62,16 @@ fun OnboardingScreen(
 ) {
 
     // OnboardScreenOne -> User can upload photo and Name.
-    // OnboardScreenTwo -> user can choose Topics (atleast 3 and at most 5)
+    // OnboardScreenTwo -> user can choose Topics (at least 3 and at most 5)
 
     // OnboardResult -> only for the final screen.
     // OnboardUiState -> It helps to decide which screen user is currently in.
 
-    when (onboardingViewModel.currentOnboardScreen) {
-        OnboardScreenType.OnboardScreenOne -> OnboardScreenOne(modifier, onboardingViewModel)
-        OnboardScreenType.OnboardScreenTwo -> OnboardScreenTwo(modifier, onboardingViewModel, navController)
+    Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+        when (onboardingViewModel.currentOnboardScreen) {
+            OnboardScreenType.OnboardScreenOne -> OnboardScreenOne(modifier.padding(innerPadding), onboardingViewModel)
+            OnboardScreenType.OnboardScreenTwo -> OnboardScreenTwo(modifier.padding(innerPadding), onboardingViewModel, navController)
+        }
     }
 
 }
@@ -92,7 +96,7 @@ fun OnboardScreenOne(
         modifier = modifier
     ) {
         Column(
-            modifier = modifier.verticalScroll(scrollState),
+            modifier = Modifier.fillMaxSize().verticalScroll(scrollState),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -150,6 +154,8 @@ fun OnboardScreenOne(
                 .align(Alignment.BottomEnd)
                 .wrapContentWidth()
                 .padding(horizontal = 40.dp, vertical = 40.dp),
+
+            colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor),
             onClick = {
                 onboardingViewModel.moveToOnboardingScreenTwo()
             }
@@ -173,7 +179,7 @@ fun OnboardScreenTwo(
     LaunchedEffect(onboardResult) {
         when(onboardResult) {
             OnboardResult.Success -> {
-                navController.navigate(AppScreen.HomeScreen.route) {
+                navController.navigate(AppScreen.MainScreen.route) {
                     popUpTo(0) {inclusive = true}
                 }
             }
@@ -260,11 +266,13 @@ fun OnboardScreenTwo(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 24.dp, bottom = 24.dp),
+            colors = ButtonDefaults.buttonColors(containerColor = PrimaryColor),
+
             onClick = {
                 onboardingViewModel.onboardUserProfile()
             }
         ) {
-            Text("NEXT")
+            Text("NEXT", modifier = Modifier.padding(horizontal = 10.dp))
         }
 
     }

@@ -42,7 +42,7 @@ fun SplashScreen(
             }
 
             StartDestination.HOME -> {
-                navController.navigate(AppScreen.HomeScreen.route) {
+                navController.navigate(AppScreen.MainScreen.route) {
                     popUpTo(0) { inclusive = true }
                 }
             }

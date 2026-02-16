@@ -1,0 +1,94 @@
+package com.real.vibechat.presentation.home
+
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Person
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.Icon
+import androidx.compose.material3.NavigationBar
+import androidx.compose.material3.NavigationBarItem
+import androidx.compose.material3.NavigationBarItemDefaults
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
+import androidx.navigation.compose.rememberNavController
+import com.real.vibechat.chats.ChatsScreen
+import com.real.vibechat.explore.ExploreScreen
+import com.real.vibechat.navigation.AppScreen
+import com.real.vibechat.profile.ProfileScreen
+import com.real.vibechat.ui.theme.PrimaryColor
+import com.real.vibechat.ui.theme.PrimaryLightColor
+
+@Composable
+fun MainScreen(
+    modifier: Modifier,
+    rootNavController: NavController
+) {
+
+    val bottomNavController = rememberNavController()
+
+    Scaffold(
+        bottomBar = {
+            BottomBar(bottomNavController)
+        }
+    ) { innerPadding ->
+
+        NavHost(
+            navController = bottomNavController,
+            startDestination = AppScreen.Chats.route,
+            modifier = modifier.padding(innerPadding)
+        ) {
+            composable(AppScreen.Explore.route) {
+                ExploreScreen()
+            }
+            composable(AppScreen.Chats.route) {
+                ChatsScreen()
+            }
+            composable(AppScreen.Profile.route) {
+                ProfileScreen()
+            }
+        }
+    }
+}
+
+@Composable
+fun BottomBar(
+    bottomNavController: NavHostController
+) {
+    val bottomNavItems = listOf(
+        BottomNavItem("Explore", AppScreen.Explore.route, Icons.Default.Search),
+        BottomNavItem("Chats", AppScreen.Chats.route, Icons.Default.Email),
+        BottomNavItem("Profile", AppScreen.Profile.route, Icons.Default.Person)
+    )
+
+    val currentRoute = bottomNavController.currentBackStackEntryAsState()
+        .value?.destination?.route
+
+    NavigationBar {
+        bottomNavItems.forEach { item ->
+            NavigationBarItem(
+                selected = currentRoute == item.route,
+                colors = NavigationBarItemDefaults.colors(
+                    indicatorColor = PrimaryLightColor
+                ),
+                onClick = {
+                    bottomNavController.navigate(item.route) {
+                        popUpTo(bottomNavController.graph.startDestinationId) {
+                        }
+                        launchSingleTop = true
+                    }
+                },
+                icon = { Icon(item.icon, contentDescription = item.label) },
+                label = { Text(item.label) }
+            )
+        }
+    }
+
+}

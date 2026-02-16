@@ -8,14 +8,13 @@ import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.compose.composable
 import androidx.navigation.navigation
-import com.real.vibechat.presentation.home.HomeScreen
+import com.real.vibechat.presentation.home.MainScreen
 import com.real.vibechat.presentation.onboarding.OnboardingScreen
 import com.real.vibechat.presentation.splash.SplashScreen
 
 fun NavGraphBuilder.appGraph(
     navController: NavController,
-    startDestination: String,
-    paddingValues: PaddingValues
+    startDestination: String
 ) {
 
     navigation(
@@ -25,22 +24,21 @@ fun NavGraphBuilder.appGraph(
         composable(AppScreen.Splash.route) {
             SplashScreen(
                 Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
+                    .fillMaxSize(),
                 navController
             )
         }
         composable(AppScreen.Onboarding.route) {
             OnboardingScreen(
                 Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
+                    .fillMaxSize(),
                 navController
             )
         }
 
-        composable(AppScreen.HomeScreen.route) {
-            HomeScreen(Modifier.fillMaxSize().padding(paddingValues))
+        // this will be main screen
+        composable(AppScreen.MainScreen.route) {
+            MainScreen(Modifier.fillMaxSize(), navController)
         }
     }
 

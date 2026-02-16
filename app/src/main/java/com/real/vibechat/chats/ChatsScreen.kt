@@ -1,20 +1,19 @@
-package com.real.vibechat.presentation.home
+package com.real.vibechat.chats
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun HomeScreen(modifier: Modifier) {
+fun ChatsScreen(modifier: Modifier = Modifier) {
 
     Box(
-        modifier = modifier,
+        modifier.fillMaxSize(),
         contentAlignment = Alignment.Center
     ) {
-        Text("Home Screen")
+        Text(text = "Chats Screen")
     }
-
-
 }
