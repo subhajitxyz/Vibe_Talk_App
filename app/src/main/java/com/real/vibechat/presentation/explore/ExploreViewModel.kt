@@ -28,11 +28,9 @@ class ExploreViewModel @Inject constructor(
         private set
 
     fun refreshUsers() {
-        viewModelScope.launch {
-            isRefreshing = true
-            fetchNewUsers()
-            isRefreshing = false
-        }
+        isRefreshing = true
+        fetchNewUsers()
+        isRefreshing = false
     }
 
     private fun fetchNewUsers() {
