@@ -15,8 +15,7 @@ import com.real.vibechat.presentation.auth.AuthPhoneNumberScreen
 import com.real.vibechat.presentation.auth.AuthSharedViewModel
 
 fun NavGraphBuilder.authGraph(
-    navController: NavController,
-    paddingValues: PaddingValues
+    navController: NavController
 ) {
     navigation(
         startDestination = AuthScreen.AuthPhoneNum.route,
@@ -33,8 +32,7 @@ fun NavGraphBuilder.authGraph(
 
             AuthPhoneNumberScreen(
                 Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
+                    .fillMaxSize(),
                 navController,
                 viewModel
             )
@@ -50,8 +48,7 @@ fun NavGraphBuilder.authGraph(
 
             AuthOtpScreen(
                 Modifier
-                    .fillMaxSize()
-                    .padding(paddingValues),
+                    .fillMaxSize(),
                 navController,
                 viewModel
             )

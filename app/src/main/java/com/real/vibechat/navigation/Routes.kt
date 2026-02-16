@@ -6,8 +6,6 @@ sealed class Route(val route: String) {
 }
 
 sealed class AuthScreen(val route: String) {
-//    object Auth: AuthScreen("AuthScreen")
-
     object AuthPhoneNum: AuthScreen("AuthPhoneNumScreen")
     object AuthOtp: AuthScreen("AuthOtpScreen")
 
@@ -16,5 +14,10 @@ sealed class AuthScreen(val route: String) {
 sealed class AppScreen(val route: String) {
     object Splash: AppScreen("SplashScreen")
     object Onboarding: AppScreen("OnboardingScreen")
-    object HomeScreen: AppScreen("HomeScreen")
+    object MainScreen: AppScreen("MainScreen")
+
+
+    object Explore: AppScreen("ExploreScreen")
+    object Chats: AppScreen("ChatsScreen")
+    object Profile: AppScreen("ProfileScreen")
 }
