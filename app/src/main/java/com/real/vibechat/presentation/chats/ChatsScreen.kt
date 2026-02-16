@@ -1,4 +1,4 @@
-package com.real.vibechat.chats
+package com.real.vibechat.presentation.chats
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize

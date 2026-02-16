@@ -19,17 +19,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.real.vibechat.chats.ChatsScreen
-import com.real.vibechat.explore.ExploreScreen
+import com.real.vibechat.presentation.chats.ChatsScreen
+import com.real.vibechat.presentation.explore.ExploreScreen
 import com.real.vibechat.navigation.AppScreen
-import com.real.vibechat.profile.ProfileScreen
-import com.real.vibechat.ui.theme.PrimaryColor
+import com.real.vibechat.presentation.profile.ProfileScreen
 import com.real.vibechat.ui.theme.PrimaryLightColor
 
 @Composable
 fun MainScreen(
-    modifier: Modifier,
-    rootNavController: NavController
+    modifier: Modifier
 ) {
 
     val bottomNavController = rememberNavController()
