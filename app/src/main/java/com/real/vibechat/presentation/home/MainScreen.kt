@@ -15,19 +15,23 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.real.vibechat.presentation.chats.ChatsScreen
 import com.real.vibechat.presentation.explore.ExploreScreen
 import com.real.vibechat.navigation.AppScreen
 import com.real.vibechat.presentation.profile.ProfileScreen
+import com.real.vibechat.presentation.story.StoryScreen
 import com.real.vibechat.ui.theme.PrimaryLightColor
 
 @Composable
 fun MainScreen(
-    modifier: Modifier
+    modifier: Modifier,
+    rootNavController: NavController
 ) {
 
     val bottomNavController = rememberNavController()
@@ -44,14 +48,17 @@ fun MainScreen(
             modifier = modifier.padding(innerPadding)
         ) {
             composable(AppScreen.Explore.route) {
-                ExploreScreen()
+                ExploreScreen(rootNavController)
             }
             composable(AppScreen.Chats.route) {
                 ChatsScreen()
             }
             composable(AppScreen.Profile.route) {
-                ProfileScreen()
+                ProfileScreen(
+                    rootNavController
+                )
             }
+
         }
     }
 }

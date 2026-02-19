@@ -55,7 +55,9 @@ class OnboardRepoImpl @Inject constructor(
                 "username" to username,
                 "choices" to userChoices,
                 "profileImage" to imageUrl,
+                "videoUrl" to null,
                 "onboarded" to true,
+                "caption" to "",
                 "createdAt" to FieldValue.serverTimestamp()
             )
 
