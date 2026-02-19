@@ -59,6 +59,7 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.androidx.compose.foundation.layout)
     implementation(libs.firebase.storage)
+    implementation(libs.androidx.media3.ui)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -98,6 +99,11 @@ dependencies {
 //    implementation("com.google.firebase:firebase-firestore-ktx")
 
     implementation("io.coil-kt:coil-compose:2.6.0")
+
+    implementation("androidx.media3:media3-transformer:1.3.1")
+    implementation("androidx.media3:media3-common:1.3.1")
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
+
 
 
 }

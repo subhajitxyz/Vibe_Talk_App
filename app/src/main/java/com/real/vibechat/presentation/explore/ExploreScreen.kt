@@ -1,6 +1,8 @@
 package com.real.vibechat.presentation.explore
 
 import android.content.res.Configuration.ORIENTATION_LANDSCAPE
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -38,14 +40,17 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.real.vibechat.R
 import com.real.vibechat.domain.models.User
+import com.real.vibechat.navigation.AppScreen
 import com.real.vibechat.ui.theme.PrimaryColor
 
 @Composable
 fun ExploreScreen(
+    navController: NavController,
     exploreViewModel: ExploreViewModel = hiltViewModel()
 ) {
 
@@ -56,7 +61,8 @@ fun ExploreScreen(
         is ExploreUiState.Success -> {
             ExploreUserListScreen(
                 (exploreUiState as ExploreUiState.Success).users,
-                exploreViewModel
+                exploreViewModel,
+                navController
             )
         }
         is ExploreUiState.Error -> ErrorScreen(
@@ -114,7 +120,8 @@ fun ErrorScreen(
 @Composable
 fun ExploreUserListScreen(
     users: List<User>,
-    exploreViewModel: ExploreViewModel
+    exploreViewModel: ExploreViewModel,
+    navController: NavController
 ) {
 
     val isRefreshing = exploreViewModel.isRefreshing
@@ -154,7 +161,12 @@ fun ExploreUserListScreen(
                 contentPadding = PaddingValues(12.dp)
             ) {
                 items(users) { user ->
-                    UserCard(user)
+                    UserCard(user) { imageUrl, videoUrl ->
+                       navController.navigate(
+                                AppScreen.Story.createRoute(imageUrl, videoUrl)
+                            )
+
+                    }
                 }
             }
         }
@@ -165,7 +177,10 @@ fun ExploreUserListScreen(
 }
 
 @Composable
-fun UserCard(user: User) {
+fun UserCard(
+    user: User,
+    onProfileClick: (String?,String?) -> Unit
+) {
 
     Column(
         modifier = Modifier
@@ -176,27 +191,48 @@ fun UserCard(user: User) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
 
-        AsyncImage(
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(user.profileImage)
-                .crossfade(true)
-                .build(),
-            contentDescription = "Profile Image",
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(1f)
-                .padding(20.dp)
-                .clip(CircleShape),
-            contentScale = ContentScale.Crop,
-            placeholder = painterResource(R.drawable.image_placeholder_icon),
-            error = painterResource(R.drawable.image_placeholder_icon)
-        )
+                .padding(15.dp)
+                .aspectRatio(1f)// slightly bigger than image
+                .clip(CircleShape)
+                .border(
+                    width = 4.dp,
+                    color = if(user.profileIntroVideo!= null) Color.Green
+                    else Color.Gray,
+                    shape = CircleShape
+                )
+                .padding(2.dp) // space between ring & image
+                .clickable(
+                    onClick = { onProfileClick(user.profileImage, user.profileIntroVideo) }
+                ),
+            contentAlignment = Alignment.Center
+        ) {
+
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(user.profileImage)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = "Profile Image",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .aspectRatio(1f)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop,
+                placeholder = painterResource(R.drawable.image_placeholder_icon),
+                error = painterResource(R.drawable.image_placeholder_icon)
+            )
+        }
 
 
         Text(
             text = user.username,
             style = MaterialTheme.typography.bodyMedium,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            textAlign = TextAlign.Center,
+            maxLines = 2
         )
     }
 }

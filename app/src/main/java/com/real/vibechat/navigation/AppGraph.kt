@@ -6,11 +6,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.real.vibechat.presentation.home.MainScreen
 import com.real.vibechat.presentation.onboarding.OnboardingScreen
 import com.real.vibechat.presentation.splash.SplashScreen
+import com.real.vibechat.presentation.story.StoryScreen
 
 fun NavGraphBuilder.appGraph(
     navController: NavController,
@@ -38,7 +41,33 @@ fun NavGraphBuilder.appGraph(
 
         // this will be main screen
         composable(AppScreen.MainScreen.route) {
-            MainScreen(Modifier.fillMaxSize())
+            MainScreen(Modifier.fillMaxSize(), navController)
+        }
+
+        composable(
+            route = AppScreen.Story.route,
+            arguments = listOf(
+                navArgument("imageUrl") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = ""
+                },
+                navArgument("videoUrl") {
+                    type = NavType.StringType
+                    nullable = true
+                    defaultValue = ""
+                }
+            )
+        ) { backStackEntry ->
+
+            val imageUrl = backStackEntry.arguments?.getString("imageUrl")
+            val videoUrl = backStackEntry.arguments?.getString("videoUrl")
+
+            StoryScreen(
+                imageUrl = imageUrl?.ifEmpty { null },
+                videoUrl = videoUrl?.ifEmpty { null },
+                rootNavController = navController
+            )
         }
     }
 
