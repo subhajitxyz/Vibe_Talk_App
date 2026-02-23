@@ -4,6 +4,7 @@ import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.storage.FirebaseStorage
 import com.real.vibechat.domain.repository.OnboardRepository
 import com.real.vibechat.presentation.onboarding.OnboardResult
@@ -36,6 +37,8 @@ class OnboardRepoImpl @Inject constructor(
 
         val userId = firebaseAuth.currentUser?.uid
             ?: return OnboardResult.Error("User not authenticated")
+        val fcmToken = FirebaseMessaging.getInstance().token.await()
+            ?: return OnboardResult.Error("Not Getting fcm token")
 
         return try {
 
@@ -53,6 +56,7 @@ class OnboardRepoImpl @Inject constructor(
             // 2️⃣ Create user data map
             val userData = hashMapOf(
                 "userId" to userId,
+                "fcmTokens" to listOf(fcmToken),
                 "username" to username,
                 "choices" to userChoices,
                 "profileImage" to imageUrl,

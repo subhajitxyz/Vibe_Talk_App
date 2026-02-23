@@ -9,6 +9,7 @@ import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import androidx.navigation.navigation
 import com.real.vibechat.presentation.chat.ChatRoomScreen
 import com.real.vibechat.presentation.home.MainScreen
@@ -76,6 +77,11 @@ fun NavGraphBuilder.appGraph(
             arguments = listOf(
                 navArgument("userId") {
                     type = NavType.StringType
+                }
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "vibechat://chat/{userId}"
                 }
             )
         ) {
