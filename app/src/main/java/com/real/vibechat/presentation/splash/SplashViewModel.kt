@@ -37,7 +37,7 @@ class SplashViewModel @Inject constructor(
                 return@launch
             }
 
-            val delayJob = async { delay(1500) }
+            val delayJob = async { delay(1000) }
             val userJob = async { checkUserFromFirestore(userId) }
 
             delayJob.await()

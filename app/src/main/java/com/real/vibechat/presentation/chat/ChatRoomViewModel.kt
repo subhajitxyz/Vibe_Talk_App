@@ -10,6 +10,7 @@ import com.real.vibechat.data.repository.ProfileRepository
 import com.real.vibechat.domain.models.Message
 import com.real.vibechat.domain.models.UserProfile
 import com.real.vibechat.navigation.AppScreen
+import com.real.vibechat.utils.AppState
 import com.real.vibechat.utils.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -111,7 +112,7 @@ class ChatRoomViewModel @Inject constructor(
                             id = UUID.randomUUID().toString(),
                             chatRoomId = chatRoomId,
                             senderId = sessionManager.getUserId()!!,
-                            senderName = "USer Name",
+                            senderName = currentUserProfile?.name ?: "User",
                             senderType = SenderType.SELF,
                             body = intent.input,
                             sentAt = System.currentTimeMillis(),
@@ -124,5 +125,13 @@ class ChatRoomViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    fun setActiveChatRoom() {
+        AppState.activeChatRoomId = chatRoomId
+    }
+
+    fun removeActiveChatRoom() {
+        AppState.activeChatRoomId = null
     }
 }

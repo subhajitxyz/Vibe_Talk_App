@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.animation.EnterTransition
 import androidx.compose.animation.ExitTransition
+import androidx.compose.runtime.LaunchedEffect
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import com.real.vibechat.navigation.AppScreen
@@ -21,8 +22,26 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+
             VibeChatTheme {
                 val navController = rememberNavController()
+                LaunchedEffect(Unit) {
+                    intent?.data?.let { uri ->
+                        if (uri.scheme == "vibechat" && uri.host == "chat") {
+
+                            val userId = uri.lastPathSegment ?: return@let
+
+                            // Clear entire navigation stack
+                            navController.navigate(
+                                AppScreen.ChatRoomScreen.createRoute(userId)
+                            ) {
+                                popUpTo(navController.graph.startDestinationId) {
+                                    inclusive = true
+                                }
+                            }
+                        }
+                    }
+                }
 
                 NavHost(
                     navController = navController,
