@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.real.vibechat.data.media.VideoTrimmer
 import com.real.vibechat.data.repository.ProfileRepository
+import com.real.vibechat.utils.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +19,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
     private val repository: ProfileRepository,
+    private val sessionManager: SessionManager,
     private val videoTrimmer: VideoTrimmer
 ) : ViewModel() {
 
@@ -86,7 +88,7 @@ class ProfileViewModel @Inject constructor(
             _state.update { it.copy(isLoading = true) }
 
             try {
-                val profile = repository.fetchProfile()
+                val profile = repository.fetchProfile(sessionManager.getUserId())
 
                 _state.update {
                     it.copy(

@@ -1,5 +1,6 @@
 package com.real.vibechat.presentation.story
 
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,14 +14,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.isTraceInProgress
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
@@ -29,12 +25,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.media3.common.MediaItem
-import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
 import androidx.navigation.NavController
-import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter
+import coil.compose.SubcomposeAsyncImage
+import coil.compose.SubcomposeAsyncImageContent
 import com.real.vibechat.R
 
 @Composable
@@ -88,7 +84,8 @@ fun StoryScreen(
         }
 
         Box(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
                 .padding(paddingValues)
                 .background(Color.Black),
             contentAlignment = Alignment.Center,
@@ -97,18 +94,7 @@ fun StoryScreen(
 
             when(state.content) {
                 StoryType.IMAGE -> {
-                    AsyncImage(
-                        modifier = Modifier.fillMaxSize(),
-                        model = imageUrl,
-                        contentDescription = "User profile Image",
-                        placeholder = painterResource(R.drawable.image_placeholder_icon),
-                        error = painterResource(id = R.drawable.image_placeholder_icon),
-                        onSuccess = {
-                            // start timer for showing video after 4 sec.
-                            storyViewModel.startImageTimer(4000)
-
-                        }
-                    )
+                    StoryImagePlayer(imageUrl, storyViewModel)
                 }
 
                 StoryType.VIDEO -> {
@@ -123,14 +109,18 @@ fun StoryScreen(
             }
 
             LinearProgressIndicator(
-                modifier = Modifier.fillMaxWidth()
-                    .align(Alignment.TopCenter).padding(top = 10.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter)
+                    .padding(top = 10.dp),
                 progress = progress
             )
 
             if (state.isLoading) {
                 CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center).size(25.dp),
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .size(25.dp),
                     strokeWidth = 2.dp
                 )
             }
@@ -142,11 +132,49 @@ fun StoryScreen(
 }
 
 @Composable
+fun StoryImagePlayer(
+    imageUrl: String?,
+    storyViewModel: StoryViewModel
+) {
+    SubcomposeAsyncImage(
+        model = imageUrl,
+        contentDescription = "User profile Image",
+        modifier = Modifier.fillMaxSize()
+    ) {
+        when (painter.state) {
+
+            is AsyncImagePainter.State.Loading -> {
+                // 👇 Show loading UI
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            }
+
+            is AsyncImagePainter.State.Success -> {
+                // 👇 Start timer only after image fully loads
+                storyViewModel.startImageTimer(4000)
+                SubcomposeAsyncImageContent()
+            }
+
+            is AsyncImagePainter.State.Error -> {
+                Image(
+                    painter = painterResource(R.drawable.image_placeholder_icon),
+                    contentDescription = "Error image",
+                    modifier = Modifier.fillMaxSize()
+                )
+            }
+            else -> {}
+        }
+    }
+}
+
+@Composable
 fun StoryVideoPlayer(
     exoPlayer: ExoPlayer
 ) {
-
-
     AndroidView(
         factory = {
             PlayerView(it).apply {

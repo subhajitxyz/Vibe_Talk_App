@@ -1,5 +1,7 @@
 package com.real.vibechat.presentation.home
 
+import androidx.compose.animation.EnterTransition
+import androidx.compose.animation.ExitTransition
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
@@ -45,13 +47,17 @@ fun MainScreen(
         NavHost(
             navController = bottomNavController,
             startDestination = AppScreen.Chats.route,
+            enterTransition = { EnterTransition.None },
+            exitTransition = { ExitTransition.None },
+            popEnterTransition = { EnterTransition.None },
+            popExitTransition = { ExitTransition.None },
             modifier = modifier.padding(innerPadding)
         ) {
             composable(AppScreen.Explore.route) {
                 ExploreScreen(rootNavController)
             }
             composable(AppScreen.Chats.route) {
-                ChatsScreen()
+                ChatsScreen(rootNavController)
             }
             composable(AppScreen.Profile.route) {
                 ProfileScreen(
