@@ -20,6 +20,8 @@ import androidx.compose.foundation.lazy.staggeredgrid.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
@@ -161,12 +163,20 @@ fun ExploreUserListScreen(
                 contentPadding = PaddingValues(12.dp)
             ) {
                 items(users) { user ->
-                    UserCard(user) { imageUrl, videoUrl ->
-                       navController.navigate(
+                    UserCard(
+                        user,
+                        onProfileClick = { imageUrl, videoUrl ->
+                            navController.navigate(
                                 AppScreen.Story.createRoute(imageUrl, videoUrl)
                             )
 
-                    }
+                        },
+                        onMessageButtonClick = {
+                            navController.navigate(
+                                AppScreen.ChatRoomScreen.createRoute(user.userId)
+                            )
+                        }
+                    )
                 }
             }
         }
@@ -179,51 +189,68 @@ fun ExploreUserListScreen(
 @Composable
 fun UserCard(
     user: User,
-    onProfileClick: (String?,String?) -> Unit
+    onProfileClick: (String?,String?) -> Unit,
+    onMessageButtonClick: () -> Unit
 ) {
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .height((150..400).random().dp)
+            .height((150..450).random().dp)
             .padding(12.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+        Box {
 
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(15.dp)
-                .aspectRatio(1f)// slightly bigger than image
-                .clip(CircleShape)
-                .border(
-                    width = 4.dp,
-                    color = if(user.profileIntroVideo!= null) Color.Green
-                    else Color.Gray,
-                    shape = CircleShape
-                )
-                .padding(2.dp) // space between ring & image
-                .clickable(
-                    onClick = { onProfileClick(user.profileImage, user.profileIntroVideo) }
-                ),
-            contentAlignment = Alignment.Center
-        ) {
-
-            AsyncImage(
-                model = ImageRequest.Builder(LocalContext.current)
-                    .data(user.profileImage)
-                    .crossfade(true)
-                    .build(),
-                contentDescription = "Profile Image",
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .aspectRatio(1f)
-                    .clip(CircleShape),
-                contentScale = ContentScale.Crop,
-                placeholder = painterResource(R.drawable.image_placeholder_icon),
-                error = painterResource(R.drawable.image_placeholder_icon)
-            )
+                    .padding(15.dp)
+                    .aspectRatio(1f)// slightly bigger than image
+                    .clip(CircleShape)
+                    .border(
+                        width = 4.dp,
+                        color = if (user.profileIntroVideo != null) Color.Green
+                        else Color.Gray,
+                        shape = CircleShape
+                    )
+                    .padding(2.dp) // space between ring & image
+                    .clickable(
+                        onClick = { onProfileClick(user.profileImage, user.profileIntroVideo) }
+                    ),
+                contentAlignment = Alignment.Center
+            ) {
+
+                AsyncImage(
+                    model = ImageRequest.Builder(LocalContext.current)
+                        .data(user.profileImage)
+                        .crossfade(true)
+                        .build(),
+                    contentDescription = "Profile Image",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1f)
+                        .clip(CircleShape),
+                    contentScale = ContentScale.Crop,
+                    placeholder = painterResource(R.drawable.image_placeholder_icon),
+                    error = painterResource(R.drawable.image_placeholder_icon)
+                )
+            }
+
+
+
+            IconButton(
+                onClick = onMessageButtonClick,
+                modifier = Modifier.align(Alignment.BottomEnd)
+            ) {
+                Icon(
+                    modifier = Modifier.size(30.dp),
+                    painter = painterResource(id = R.drawable.message_icon),
+                    contentDescription = "Message",
+                    tint = Color.Unspecified
+                )
+            }
         }
 
 
@@ -236,3 +263,4 @@ fun UserCard(
         )
     }
 }
+

@@ -10,6 +10,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.real.vibechat.presentation.chat.ChatRoomScreen
 import com.real.vibechat.presentation.home.MainScreen
 import com.real.vibechat.presentation.onboarding.OnboardingScreen
 import com.real.vibechat.presentation.splash.SplashScreen
@@ -68,6 +69,17 @@ fun NavGraphBuilder.appGraph(
                 videoUrl = videoUrl?.ifEmpty { null },
                 rootNavController = navController
             )
+        }
+
+        composable(
+            route = AppScreen.ChatRoomScreen.route,
+            arguments = listOf(
+                navArgument("userId") {
+                    type = NavType.StringType
+                }
+            )
+        ) {
+            ChatRoomScreen(navController= navController)
         }
     }
 

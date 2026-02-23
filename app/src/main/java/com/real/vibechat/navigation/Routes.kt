@@ -28,6 +28,11 @@ sealed class AppScreen(val route: String) {
         }
     }
 
+    object ChatRoomScreen : AppScreen("chat_room/{userId}") {
+
+        fun createRoute(userId: String) = "chat_room/$userId"
+    }
+
 
     object Explore: AppScreen("ExploreScreen")
     object Chats: AppScreen("ChatsScreen")

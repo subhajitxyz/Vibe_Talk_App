@@ -52,6 +52,7 @@ class OnboardRepoImpl @Inject constructor(
 
             // 2️⃣ Create user data map
             val userData = hashMapOf(
+                "userId" to userId,
                 "username" to username,
                 "choices" to userChoices,
                 "profileImage" to imageUrl,

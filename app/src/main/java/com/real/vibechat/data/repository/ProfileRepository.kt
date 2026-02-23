@@ -15,15 +15,15 @@ class ProfileRepository @Inject constructor(
     private val auth: FirebaseAuth
 ) {
 
-    suspend fun fetchProfile(): UserProfile {
-        val uid = auth.currentUser?.uid ?: throw Exception("Not logged in")
+    suspend fun fetchProfile(userId: String?): UserProfile {
+        val uid = userId?: throw Exception("Not logged in")
 
         val doc = firestore.collection("users")
             .document(uid)
             .get()
             .await()
 
-        val user = doc.toObject(User::class.java)?: throw Exception("Profile not found")
+        val user = doc.toObject(User::class.java)?: throw Exception("${userId}Profile not found")
 
         return UserProfile(
                 name = user.username,
