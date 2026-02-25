@@ -4,11 +4,13 @@ import android.app.Activity
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -27,6 +29,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -73,7 +76,8 @@ fun AuthPhoneNumberScreen(
             modifier = modifier
                 .padding(innerPadding)
                 .padding(horizontal = 30.dp)
-                .verticalScroll(scrollState),
+                .verticalScroll(scrollState)
+                .imePadding(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -139,12 +143,16 @@ fun AuthPhoneNumberScreen(
             }
             Spacer(modifier = Modifier.height(40.dp))
 
-            if(authState == AuthResult.Loading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(20.dp),
-                    color = PrimaryColor,
-                    strokeWidth = 2.dp
-                )
+            Box(
+                Modifier.size(20.dp)
+            ) {
+                if(authState == AuthResult.Loading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = PrimaryColor,
+                        strokeWidth = 2.dp
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(40.dp))

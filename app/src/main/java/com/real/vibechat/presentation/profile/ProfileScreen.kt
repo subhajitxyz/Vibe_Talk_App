@@ -13,9 +13,11 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.verticalScroll
@@ -67,6 +69,11 @@ fun ProfileScreen(
 
     val scrollState = rememberScrollState()
 
+    // Load once
+    LaunchedEffect(Unit) {
+        profileViewModel.onIntent(ProfileIntent.LoadProfile)
+    }
+
     val imagePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri ->
@@ -81,11 +88,6 @@ fun ProfileScreen(
         uri?.let {
             profileViewModel.onIntent(ProfileIntent.IntroVideoSelected(it))
         }
-    }
-
-    // Load once
-    LaunchedEffect(Unit) {
-        profileViewModel.onIntent(ProfileIntent.LoadProfile)
     }
 
     // Collect one-time effects
@@ -116,7 +118,8 @@ fun ProfileScreen(
     Column(
         modifier = Modifier.fillMaxSize()
             .padding(horizontal = 30.dp)
-            .verticalScroll(scrollState),
+            .verticalScroll(scrollState)
+            .imePadding(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -229,12 +232,17 @@ fun ProfileScreen(
 
         Spacer(Modifier.height(20.dp))
 
-        if (state.isSaving) {
-            CircularProgressIndicator(
-                modifier = Modifier.size(25.dp),
-                strokeWidth = 2.dp
-            )
+        Box(
+            Modifier.size(20.dp)
+        ) {
+            if (state.isSaving) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    strokeWidth = 2.dp
+                )
+            }
         }
+
         Spacer(Modifier.height(50.dp))
     }
 }
