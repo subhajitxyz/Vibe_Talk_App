@@ -32,15 +32,10 @@ class SplashViewModel @Inject constructor(
             val userId = sessionManager.getUserId()
 
             if (userId == null) {
-                delay(1500)
                 _destination.value = StartDestination.AUTH
                 return@launch
             }
-
-            val delayJob = async { delay(1000) }
             val userJob = async { checkUserFromFirestore(userId) }
-
-            delayJob.await()
             val result = userJob.await()
 
             _destination.value = result

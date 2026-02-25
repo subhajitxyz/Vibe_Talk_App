@@ -3,11 +3,13 @@ package com.real.vibechat.presentation.auth
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -75,7 +77,8 @@ fun AuthOtpScreen(
             modifier = modifier
                 .padding(innerPadding)
                 .padding(horizontal = 30.dp)
-                .verticalScroll(scrollState),
+                .verticalScroll(scrollState)
+                .imePadding(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
@@ -130,13 +133,18 @@ fun AuthOtpScreen(
 
             Spacer(modifier = Modifier.height(40.dp))
 
-            if(authState == AuthResult.Loading) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(20.dp),
-                    color = PrimaryColor,
-                    strokeWidth = 2.dp
-                )
+            Box(
+                Modifier.size(20.dp)
+            ) {
+                if(authState == AuthResult.Loading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = PrimaryColor,
+                        strokeWidth = 2.dp
+                    )
+                }
             }
+
             Spacer(modifier = Modifier.height(40.dp))
 
         }

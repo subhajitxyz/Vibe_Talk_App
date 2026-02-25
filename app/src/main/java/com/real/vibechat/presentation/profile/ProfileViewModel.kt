@@ -23,7 +23,7 @@ class ProfileViewModel @Inject constructor(
     private val videoTrimmer: VideoTrimmer
 ) : ViewModel() {
 
-    private val _state = MutableStateFlow(ProfileUiState())
+    private val _state = MutableStateFlow(ProfileUiState(isLoading = true))
     val state: StateFlow<ProfileUiState> = _state.asStateFlow()
 
     private val _effect = Channel<ProfileEffect>()

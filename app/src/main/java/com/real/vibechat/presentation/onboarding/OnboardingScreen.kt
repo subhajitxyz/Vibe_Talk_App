@@ -16,6 +16,7 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
@@ -96,7 +97,7 @@ fun OnboardScreenOne(
         modifier = modifier
     ) {
         Column(
-            modifier = Modifier.fillMaxSize().verticalScroll(scrollState),
+            modifier = Modifier.fillMaxSize().verticalScroll(scrollState).imePadding(),
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
