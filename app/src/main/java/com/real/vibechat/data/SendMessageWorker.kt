@@ -42,6 +42,8 @@ class SendMessageWorker @AssistedInject constructor(
                 "lastMessage" to firestoreMessageMap
             )
 
+            // Add participant before adding message. This is very important because firestore rules
+            // check if user is member of participants list. Then only user can read, write.
             chatDocRef.set(chatData, SetOptions.merge()).await()
 
             // 1️⃣ Send message
