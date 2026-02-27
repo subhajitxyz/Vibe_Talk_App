@@ -36,12 +36,6 @@ class SendMessageWorker @AssistedInject constructor(
             val chatDocRef = firestore.collection("chats")
                 .document(message.chatRoomId)
 
-            // 1️⃣ Send message
-            chatDocRef.collection("messages")
-                .document(message.id)
-                .set(firestoreMessageMap)
-                .await()
-
             // 2️⃣ Update chat document (safe merge)
             val chatData = mapOf(
                 "participants" to listOf(message.senderId, receiverId),
@@ -49,6 +43,12 @@ class SendMessageWorker @AssistedInject constructor(
             )
 
             chatDocRef.set(chatData, SetOptions.merge()).await()
+
+            // 1️⃣ Send message
+            chatDocRef.collection("messages")
+                .document(message.id)
+                .set(firestoreMessageMap)
+                .await()
 
             // 3️⃣ Update local DB
             chatDAO.updateStatus(message.id, MessageStatus.SENT)
