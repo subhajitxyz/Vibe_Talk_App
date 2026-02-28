@@ -15,6 +15,7 @@ import com.real.vibechat.data.models.MessageDTO
 import com.real.vibechat.data.models.toChatRoomEntity
 import com.real.vibechat.data.models.toMessageEntity
 import com.real.vibechat.data.room.ChatDAO
+import com.real.vibechat.data.room.ratelimit.MessageLimitManager
 import com.real.vibechat.data.room.toDomain
 import com.real.vibechat.di.ApplicationScope
 import com.real.vibechat.domain.models.ChatRoom
@@ -31,6 +32,7 @@ import kotlin.String
 
 class ChatRepository @Inject constructor(
     private val chatDAO: ChatDAO,
+    private val messageLimitManager: MessageLimitManager,
     private val workManager: WorkManager,
     private val sessionManager: SessionManager,
     private val firestore: FirebaseFirestore,
@@ -75,6 +77,7 @@ class ChatRepository @Inject constructor(
             }
 
     suspend fun sendMessage(message: Message, receiverId: String) {
+        if(!messageLimitManager.canSendMessage()) throw Exception("Daily Message Limit exceeded. Try on next day.")
         val messageEntity = message.toMessageEntity()
         chatDAO.insert(messageEntity)
 

@@ -107,24 +107,33 @@ class ChatRoomViewModel @Inject constructor(
         when (intent) {
             is ChatIntent.SendMessage -> {
                 viewModelScope.launch {
-                    chatRepository.sendMessage(
-                        Message(
-                            id = UUID.randomUUID().toString(),
-                            chatRoomId = chatRoomId,
-                            senderId = sessionManager.getUserId()!!,
-                            senderName = currentUserProfile?.name ?: "User",
-                            senderType = SenderType.SELF,
-                            body = intent.input,
-                            sentAt = System.currentTimeMillis(),
-                            messageStatus = MessageStatus.PENDING
-                        ),
-                        receiverId = otherUserId
-                    )
+                    try {
+                        chatRepository.sendMessage(
+                            Message(
+                                id = UUID.randomUUID().toString(),
+                                chatRoomId = chatRoomId,
+                                senderId = sessionManager.getUserId()!!,
+                                senderName = currentUserProfile?.name ?: "User",
+                                senderType = SenderType.SELF,
+                                body = intent.input,
+                                sentAt = System.currentTimeMillis(),
+                                messageStatus = MessageStatus.PENDING
+                            ),
+                            receiverId = otherUserId
+                        )
 
-                    _state.update { it.copy(input = "") }
+                        _state.update { it.copy(input = "") }
+
+                    } catch (e: Exception) {
+                        _state.update { it.copy(error = e.message) }
+                    }
                 }
             }
         }
+    }
+
+    fun onErrorShown() {
+        _state.update { it.copy(error = null) }
     }
 
     fun setActiveChatRoom() {

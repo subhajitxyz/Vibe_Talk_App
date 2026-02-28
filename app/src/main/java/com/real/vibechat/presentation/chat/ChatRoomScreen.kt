@@ -1,5 +1,6 @@
 package com.real.vibechat.presentation.chat
 
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -56,8 +57,6 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import androidx.lifecycle.LifecycleObserver
-import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
@@ -77,6 +76,7 @@ fun ChatRoomScreen(
 ) {
 
     val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
 
     val chatState by chatRoomViewModel.state.collectAsStateWithLifecycle()
     var inputMessage by rememberSaveable { mutableStateOf("") }
@@ -84,6 +84,13 @@ fun ChatRoomScreen(
     val listState = rememberLazyListState()
     LaunchedEffect(chatState.messages.size) {
         listState.animateScrollToItem(0)
+    }
+
+    LaunchedEffect(chatState.error) {
+        chatState.error?.let {
+            Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            chatRoomViewModel.onErrorShown()   // reset
+        }
     }
 
     DisposableEffect(lifecycleOwner) {

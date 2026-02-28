@@ -3,6 +3,7 @@ package com.real.vibechat.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.real.vibechat.data.repository.AuthRepoImpl
+import com.real.vibechat.data.room.ratelimit.OtpLimitManager
 import com.real.vibechat.domain.repository.AuthRepository
 import dagger.Module
 import dagger.Provides
@@ -23,7 +24,8 @@ object AuthModule {
     @Singleton
     fun provideAuthRepository(
         firebaseAuth: FirebaseAuth,
-        firestore: FirebaseFirestore
+        firestore: FirebaseFirestore,
+        otpLimitManager: OtpLimitManager
     ): AuthRepository =
-        AuthRepoImpl(firebaseAuth, firestore)
+        AuthRepoImpl(firebaseAuth, firestore, otpLimitManager)
 }

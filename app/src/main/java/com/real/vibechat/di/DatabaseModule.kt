@@ -4,6 +4,8 @@ import android.content.Context
 import androidx.room.Room
 import com.real.vibechat.data.room.AppDatabase
 import com.real.vibechat.data.room.ChatDAO
+import com.real.vibechat.data.room.ratelimit.MessageLimitDao
+import com.real.vibechat.data.room.ratelimit.OtpLimitDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -33,5 +35,21 @@ object DatabaseModule {
         database: AppDatabase
     ): ChatDAO {
         return database.chatDAO()
+    }
+
+    @Provides
+    @Singleton
+    fun provideMessageLimitDao(
+        database: AppDatabase
+    ): MessageLimitDao {
+        return database.messageLimitDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideOtpLimitDao(
+        database: AppDatabase
+    ): OtpLimitDao {
+        return database.otpLimitDao()
     }
 }

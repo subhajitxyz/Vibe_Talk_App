@@ -66,7 +66,13 @@ fun AuthPhoneNumberScreen(
                     }
                 }
                 is AuthResult.Error -> {
-                    Toast.makeText(context, (authState as AuthResult.Error).e, Toast.LENGTH_SHORT).show()
+                    val error = (authState as AuthResult.Error).e
+                    if(error.isNotEmpty()) {
+                        Toast.makeText(context, (authState as AuthResult.Error).e, Toast.LENGTH_SHORT).show()
+                        // resetting error empty.
+                        authPhoneNumViewModel.onErrorShown()
+
+                    }
                 }
                 else -> Unit
             }
