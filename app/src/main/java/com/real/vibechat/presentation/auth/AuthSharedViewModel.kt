@@ -48,6 +48,10 @@ class AuthSharedViewModel @Inject constructor(
         }
     }
 
+    fun onErrorShown() {
+        _authState.value = AuthResult.Error("")
+    }
+
     private fun validatePhNumber(): Boolean {
         var isValid = true
         // 3️⃣ Phone Number Validation
@@ -55,10 +59,10 @@ class AuthSharedViewModel @Inject constructor(
             PhNumberError = "Phone number cannot be empty"
             isValid = false
         }
-//        else if (!phNumber.matches(Regex("^[0-9]{10}$"))) {
-//            PhNumberError = "Enter a valid 10-digit phone number"
-//            isValid = false
-//        }
+        else if (!phNumber.matches(Regex("^(\\+91|91)?[6-9][0-9]{9}$"))) {
+            PhNumberError = "Enter a valid 10-digit phone number"
+            isValid = false
+        }
 
         return isValid
     }

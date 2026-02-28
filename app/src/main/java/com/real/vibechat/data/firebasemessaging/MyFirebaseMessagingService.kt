@@ -39,8 +39,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val chatRoomId = remoteMessage.data["chatRoomId"] ?: ""
         val senderId = remoteMessage.data["senderId"] ?: ""
 
-        Log.d("TestNoti", "message recieved")
-
         // is user currently is in this chatroom. we will not show notification.
         if(AppState.activeChatRoomId == chatRoomId){
             return
@@ -49,7 +47,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     }
 
     private fun showNotification(title: String, message: String, userId: String) {
-        Log.d("TestNoti", "in show noti")
 
         val channelId = "chat_channel"
 

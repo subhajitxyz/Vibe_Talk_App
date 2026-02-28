@@ -11,13 +11,17 @@ import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
 import com.google.firebase.auth.PhoneAuthProvider
 import com.google.firebase.firestore.FirebaseFirestore
+import com.real.vibechat.data.room.ratelimit.OtpLimitManager
 import com.real.vibechat.presentation.auth.AuthResult
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class AuthRepoImpl @Inject constructor(
     private val firebaseAuth: FirebaseAuth,
-    private val firestore: FirebaseFirestore
+    private val firestore: FirebaseFirestore,
+    private val otpLimitManager: OtpLimitManager
 ) : AuthRepository {
 
     private var verificationId: String? = null
@@ -28,6 +32,13 @@ class AuthRepoImpl @Inject constructor(
     ): Flow<AuthResult> = callbackFlow {
 
         trySend(AuthResult.Loading)
+
+        if (!otpLimitManager.canSendOtp()) {
+            trySend(AuthResult.Error("Daily OTP limit exceeded"))
+            close()
+            return@callbackFlow
+        }
+
 
         val callbacks = object :
             PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
@@ -45,6 +56,10 @@ class AuthRepoImpl @Inject constructor(
                 token: PhoneAuthProvider.ForceResendingToken
             ) {
                 verificationId = verId
+                // save on otp sent count for rate limiting.
+                launch {
+                    otpLimitManager.incrementOtpCount()
+                }
                 trySend(AuthResult.OtpSent)
             }
         }
