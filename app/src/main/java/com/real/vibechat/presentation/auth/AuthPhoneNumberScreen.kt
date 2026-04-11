@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -31,10 +32,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.modifier.modifierLocalConsumer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -56,6 +61,25 @@ fun AuthPhoneNumberScreen(
         val activity = context as Activity
         val scrollState = rememberScrollState()
 
+        val uriHandler = LocalUriHandler.current
+
+        val annotatedText = buildAnnotatedString {
+            append("By continuing, you agree to our ")
+
+            pushStringAnnotation(tag = "TERMS", annotation = "https://sites.google.com/view/vibechat-terms/home")
+            withStyle(style = SpanStyle(color = PrimaryColor, fontWeight = FontWeight.Medium)) {
+                append("Terms & Conditions")
+            }
+            pop()
+
+            append(" and ")
+
+            pushStringAnnotation(tag = "PRIVACY", annotation = "https://sites.google.com/view/vibechat-privacy-policy/home")
+            withStyle(style = SpanStyle(color = PrimaryColor, fontWeight = FontWeight.Medium)) {
+                append("Privacy Policy")
+            }
+            pop()
+        }
         val authState by authPhoneNumViewModel.authState.collectAsStateWithLifecycle()
 
         LaunchedEffect(authState) {
@@ -147,6 +171,24 @@ fun AuthPhoneNumberScreen(
             ) {
                 Text(text = "CONTINUE", modifier = Modifier.padding(horizontal = 10.dp))
             }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            ClickableText(
+                text = annotatedText,
+                style = MaterialTheme.typography.bodySmall.copy(
+                    textAlign = TextAlign.Center
+                ),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                onClick = { offset ->
+                    annotatedText.getStringAnnotations(start = offset, end = offset)
+                        .firstOrNull()?.let { annotation ->
+                            uriHandler.openUri(annotation.item)
+                        }
+                }
+            )
             Spacer(modifier = Modifier.height(40.dp))
 
             Box(
