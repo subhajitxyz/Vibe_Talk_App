@@ -64,18 +64,38 @@ fun AuthPhoneNumberScreen(
         val uriHandler = LocalUriHandler.current
 
         val annotatedText = buildAnnotatedString {
-            append("By continuing, you agree to our ")
+            withStyle(
+                style = SpanStyle(
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            ) {
+                append("By continuing, you agree to our ")
+            }
 
-            pushStringAnnotation(tag = "TERMS", annotation = "https://sites.google.com/view/vibechat-terms/home")
-            withStyle(style = SpanStyle(color = PrimaryColor, fontWeight = FontWeight.Medium)) {
+            pushStringAnnotation(tag = "URL", annotation = "https://example.com/terms")
+            withStyle(
+                style = SpanStyle(
+                    color = MaterialTheme.colorScheme.primary
+                )
+            ) {
                 append("Terms & Conditions")
             }
             pop()
 
-            append(" and ")
+            withStyle(
+                style = SpanStyle(
+                    color = MaterialTheme.colorScheme.onBackground
+                )
+            ) {
+                append(" and ")
+            }
 
-            pushStringAnnotation(tag = "PRIVACY", annotation = "https://sites.google.com/view/vibechat-privacy-policy/home")
-            withStyle(style = SpanStyle(color = PrimaryColor, fontWeight = FontWeight.Medium)) {
+            pushStringAnnotation(tag = "URL", annotation = "https://example.com/privacy")
+            withStyle(
+                style = SpanStyle(
+                    color = MaterialTheme.colorScheme.primary
+                )
+            ) {
                 append("Privacy Policy")
             }
             pop()
