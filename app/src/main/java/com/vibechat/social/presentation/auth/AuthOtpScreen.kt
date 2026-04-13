@@ -127,7 +127,7 @@ fun AuthOtpScreen(
                     authOtpViewModel.verifyOtp(authOtpViewModel.otp)
                 }
             ) {
-                Text(text = "SENT OTP", modifier = Modifier.padding(horizontal = 10.dp))
+                Text(text = "VERIFY", modifier = Modifier.padding(horizontal = 10.dp))
             }
 
 
