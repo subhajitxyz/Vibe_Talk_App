@@ -12,13 +12,13 @@ plugins {
 }
 
 android {
-    namespace = "com.real.vibechat"
+    namespace = "com.vibechat.social"
     compileSdk {
         version = release(36)
     }
 
     defaultConfig {
-        applicationId = "com.real.vibechat"
+        applicationId = "com.vibechat.social"
         minSdk = 26
         targetSdk = 36
         versionCode = 1
